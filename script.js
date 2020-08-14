@@ -53,7 +53,6 @@ function calc(a, b, op)
 
 function count()
 {
-    // 1+2*(3+2/5)*2;
     let stackNum = [];
     let stackOp = []
     let arr = makeArr(inp.value);
