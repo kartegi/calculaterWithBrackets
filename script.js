@@ -12,11 +12,18 @@ function makeArr(value){
     for (let i = 0; i < value.length; i++)
     {
         let str = "";
-        if (value[i] == '-' || value[i] == '+' || value[i] == '*'
+        if (i == 0 && value[i] == '+')
+            i++;
+        if ((value[i] == '-' && i != 0) || value[i] == '+' || value[i] == '*'
             || value[i] == '/' || value[i] == '(' || value[i] == ')')
             arr.push(value[i]);
-        else if (value[i] >= '0' && value[i] <= '9')
+        else if ((value[i] >= '0' && value[i] <= '9') || (i == 0 && value[i] == '-' ))
         {
+            if (i == 0 && value[i] == '-' )
+            {
+                str += '-';
+                i++;
+            }
             while (value[i] >= '0' && value[i] <= '9')
             {
                 str += value[i];
@@ -26,6 +33,7 @@ function makeArr(value){
             i--;
         }
     }
+    console.log(arr)
     return (arr);
 }
 
