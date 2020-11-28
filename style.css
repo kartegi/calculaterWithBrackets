@@ -59,7 +59,7 @@
 .clear {
   transition: all ease-in 0.1s; }
 
-.btn:active, .remove:active, .clear:active {
+.btn:active, .remove:active, .clear:active, .btn6:active {
   -moz-box-shadow: inset 0 0 5px #000000;
   -webkit-box-shadow: inset 0 0 5px #000000;
   box-shadow: inset 0 0 5px #000000; }
@@ -74,7 +74,9 @@
 
 .row6 {
   display: flex;
-  width: 100%; }
+  width: 100%; 
+  
+}
 
 .btn6 {
   background: #5aed69;
@@ -87,7 +89,9 @@
   margin: 5px;
   color: #ffffff;
   border-radius: 10px;
-  cursor: pointer; }
+  cursor: pointer;
+  transition: all ease-in 0.1s;
+}
 
 .row {
   width: 100%;
