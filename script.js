@@ -1,12 +1,33 @@
-const inp = document.querySelector(".inp");
-const btn = document.querySelector(".btn");
+const inp = document.querySelector(".operation");
+const countIt = document.querySelector(".btn6");
+const clear = document.querySelector(".clear");
+const remove = document.querySelector(".remove");
+const btns = document.querySelectorAll(".btn")
 
-btn.addEventListener('click', count);
+btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        inp.value += btn.innerText
+    })
+})
+
+remove.addEventListener('click', () => {
+    inp.value = inp.value.slice(0, -1)
+})
+
+
+clear.addEventListener('click', () => {
+    inp.value = ""
+})
 
 
 
+countIt.addEventListener('click', count);
 
-function makeArr(value){
+
+
+// Converting input value to array and filtering bad value
+
+function strToArr(value){
     let arr = [];
 
     for (let i = 0; i < value.length; i++)
@@ -24,7 +45,7 @@ function makeArr(value){
                 str += '-';
                 i++;
             }
-            while (value[i] >= '0' && value[i] <= '9')
+            while ((value[i] >= '0' && value[i] <= '9') || value[i] == '.')
             {
                 str += value[i];
                 i++;
@@ -37,7 +58,9 @@ function makeArr(value){
     return (arr);
 }
 
-function calc(a, b, op)
+// Basic calculatar
+
+function calculator(a, b, op)
 {
     let result;
 
@@ -55,58 +78,73 @@ function calc(a, b, op)
         case '/':
             result = a / b
             break;
-    }
+	}
+	
     return (result);
 }
 
+// I created this function to make count function smaller
+// it does calculation till the certane point which is represented
+// as condition variable
+
+function goTrhoughCalc(stackOp, stackNum, condition, op)
+{
+
+	while (eval(condition))
+	{
+		let b = Number(stackNum.pop());
+		let a = Number(stackNum.pop());
+		
+		stackNum.push(calculator( a, b, stackOp.pop()));
+
+		if (op)
+		{
+			stackOp.push(op);
+			break;
+		}
+	}
+}
+
+// Count function is main one in this programme
+// I use polish notation and stack to solve the
+// brackets problem
+
 function count()
 {
-    let stackNum = [];
+	//stack for operands
+	let stackNum = [];
+	//stack for operators
     let stackOp = []
-    let arr = makeArr(inp.value);
-    let prior = {
+	let inputValue = strToArr(inp.value);
+	// math operators priority
+    const prior = {
         '+': 1,
         '-': 1,
         '*': 2,
         '/': 2
-    }
+    };
 
-    for (let i = 0; i < arr.length; i++)
+    for (let i = 0; i < inputValue.length; i++)
     {
-
-        if (prior[arr[i]] <= prior[stackOp[stackOp.length-1]] || arr[i] == ')')
+		// if operator at which our cicle pointing has bigger priority
+		// then the operator that is in our stackOp we make calculation
+        if (prior[inputValue[i]] <= prior[stackOp[stackOp.length-1]] || inputValue[i] == ')')
         {
-            if (prior[arr[i]] <= prior[stackOp[stackOp.length-1]])
+            if (prior[inputValue[i]] <= prior[stackOp[stackOp.length-1]])
             {
-                let b = parseInt(stackNum.pop());
-                let a = parseInt(stackNum.pop());
-
-                stackNum.push(calc( a, b, stackOp.pop()));
-                stackOp.push(arr[i]);
+				goTrhoughCalc(stackOp, stackNum, "true", inputValue[i]);
             }
-            else if (arr[i] == ')')
+            else if (inputValue[i] == ')')
             {
-                while (stackOp[stackOp.length -1] != '(')
-                {
-                    let b = parseInt(stackNum.pop());
-                    let a = parseInt(stackNum.pop());
-                    
-                    stackNum.push(calc( a, b, stackOp.pop()));
-                }
+				goTrhoughCalc(stackOp, stackNum, "stackOp[stackOp.length -1] != '('", false);
                 stackOp.pop();
             }
         }
-        else if (arr[i] == '+' || arr[i] == '-' || arr[i] == '*' || arr[i] == '/' || arr[i] == '(')
-            stackOp.push(arr[i]);
+        else if (inputValue[i] == '+' || inputValue[i] == '-' || inputValue[i] == '*' || inputValue[i] == '/' || inputValue[i] == '(')
+            stackOp.push(inputValue[i]);
         else
-            stackNum.push(arr[i]);
+            stackNum.push(inputValue[i]);
     }
-    while (stackOp.length != 0)
-    {
-        let b = parseInt(stackNum.pop());
-        let a = parseInt(stackNum.pop());
-        
-        stackNum.push(calc( a, b, stackOp.pop()));
-    }
-    console.log(stackNum);
+    goTrhoughCalc(stackOp, stackNum, "stackOp.length != 0", false);
+    inp.value = stackNum.join('')
 }
