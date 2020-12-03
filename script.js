@@ -92,6 +92,8 @@ function goTrhoughCalc(stackOp, stackNum, condition, op)
 
 	while (eval(condition))
 	{
+        if (stackOp.length === 0)
+            break;
 		let b = Number(stackNum.pop());
 		let a = Number(stackNum.pop());
 		
